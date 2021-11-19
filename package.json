@@ -1,0 +1,24 @@
+{
+  "name": "stock_room_assistant",
+  "version": "1.0.0",
+  "description": "A stock room assitant program",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swills044/stock_room_assistant.git"
+  },
+  "author": "Sean Wills",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/swills044/stock_room_assistant/issues"
+  },
+  "homepage": "https://github.com/swills044/stock_room_assistant#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "ocr-space-api-wrapper": "^2.0.0",
+    "sqlite3": "^5.0.2"
+  }
+}
