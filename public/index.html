@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+   <body>
+      <p>Click below to change the brightness and contrast of the image.</p>
+      <button onclick="filterImage()">Edit Image</button><br><br>
+      <img id="myID" src="/test-edit.jpg" width="300px" 
+         >
+      <button onclick="extractText()">Extract Text</button><br><br>
+
+
+      <button id="start-camera">Start Camera</button>
+      <video id="video" width="320" height="240" autoplay></video>
+      <button id="click-photo">Click Photo</button>
+      <canvas id="canvas" width="320" height="240"></canvas>
+
+      <script>
+
+          var endpoint = window.location.pathname;
+
+          var API = {
+
+              sendText: function (text) {
+                console.log('sending text')
+                fetch('/sendText', {
+                    method: 'post',
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({text: text})
+                    }).then(res => res.json())
+                    .then(res => console.log(res));
+              }
+          }
+
+         //OCR Key = 83e4ad974c88957
+         //OCR API = 'https://api.ocr.space/parse/imageurl?apikey=helloworld&url=http://i.imgur.com/fwxooMv.png'
+
+         function extractText() {
+            
+            //return parsed = srcToFile(endpoint + 'test-edit.jpg', 'new.png', 'image/png')
+            return canvas.toBlob(function(file){
+                var fd = new FormData();
+                fd.append('file1', new File([file], "test.jpg"));
+                var r = fetch('https://api.ocr.space/parse/image', {method:'POST', headers: {'apikey': '83e4ad974c88957'}, body:fd})
+                .then(function(res){
+                     return res.json();
+                })
+                .then(function(r){
+                    console.log(r);
+                    API.sendText(r.ParsedResults[0].ParsedText);
+                })
+                .catch(console.error)
+            }, 'image/jpeg')
+
+        }
+
+
+
+   
+
+
+         //Image capture
+
+         var img = document.getElementById("myID");
+         img.crossOrigin = "Anonymous";
+
+         let camera_button = document.querySelector("#start-camera");
+         let video = document.querySelector("#video");
+         let click_button = document.querySelector("#click-photo");
+         let canvas = document.querySelector("#canvas");
+
+         camera_button.addEventListener('click', async function() {
+               let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            video.srcObject = stream;
+         });
+
+         click_button.addEventListener('click', function() {
+
+               canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+               //Filter image
+               greyScaleImage();
+
+                //canvas.filter = "brightness(0%)";
+
+               let imageData = contrastImage(canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height), 100);
+
+               //const imageData = new ImageData(image_data_url, 2, 2);
+
+               canvas.getContext('2d').putImageData(imageData, 0, 0);
+               console.log(extractText());
+               //Go fourth and extract !
+            //    extractText().then((text)=>{
+  
+            //        API.sendText(text.ParsedResults[0].ParsedText);
+            //     })
+               
+
+ 
+         });
+
+         //Image manipulation
+
+         function contrastImage(imgData, contrast){  //input range [-100..100]
+             var d = imgData.data;
+             contrast = (contrast/100) + 1;  //convert to decimal & shift range: [0..2]
+             var intercept = 128 * (1 - contrast);
+             for(var i=0;i<d.length;i+=4){   //r,g,b,a
+                 d[i] = d[i]*contrast + intercept;
+                 d[i+1] = d[i+1]*contrast + intercept;
+                 d[i+2] = d[i+2]*contrast + intercept;
+             }
+             return imgData;
+         }
+
+         function greyScaleImage() {
+            let imgData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
+            let pixels = imgData.data;
+            for (var i = 0; i < pixels.length; i += 4) {
+
+                let lightness = parseInt((pixels[i] + pixels[i + 1] + pixels[i + 2]) / 3);
+
+                pixels[i] = lightness;
+                pixels[i + 1] = lightness;
+                pixels[i + 2] = lightness;
+            }
+            canvas.getContext('2d').putImageData(imgData, 0, 0);
+         }
+
+
+
+      </script>
+   </body>
+</html>
