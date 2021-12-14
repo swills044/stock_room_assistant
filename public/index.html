@@ -7,9 +7,13 @@
          >
       <button onclick="extractText()">Extract Text</button><br><br>
 
+      <button disabled id="flip-btn">
+        Flip Camera
+      </button>
 
       <button id="start-camera">Start Camera</button>
       <video id="video" width="320" height="240" autoplay></video>
+
       <button id="click-photo">Click Photo</button>
       <canvas id="canvas" width="320" height="240"></canvas>
 
@@ -32,6 +36,49 @@
                     .then(res => console.log(res));
               }
           }
+
+          let video = document.querySelector("#video");
+          let videoElm = document.querySelector("#video");
+        // flip button element
+        let flipBtn = document.querySelector('#flip-btn');
+
+        // default user media options
+        let defaultsOpts = { audio: false, video: true }
+        let shouldFaceUser = true;
+
+        // check whether we can use facingMode
+        let supports = navigator.mediaDevices.getSupportedConstraints();
+        if( supports['facingMode'] === true ) {
+        flipBtn.disabled = false;
+        }
+
+        let stream = null;
+
+        function capture() {
+        defaultsOpts.video = { facingMode: shouldFaceUser ? 'user' : 'environment' }
+        navigator.mediaDevices.getUserMedia(defaultsOpts)
+            .then(function(_stream) {
+            stream  = _stream;
+            videoElm.srcObject = stream;
+            videoElm.play();
+            })
+            .catch(function(err) {
+            console.log(err)
+            });
+        }
+
+        flipBtn.addEventListener('click', function(){
+        if( stream == null ) return
+        // we need to flip, stop everything
+        stream.getTracks().forEach(t => {
+            t.stop();
+        });
+        // toggle / flip
+        shouldFaceUser = !shouldFaceUser;
+        capture();
+        })
+
+        capture();
 
          //OCR Key = 83e4ad974c88957
          //OCR API = 'https://api.ocr.space/parse/imageurl?apikey=helloworld&url=http://i.imgur.com/fwxooMv.png'
@@ -66,7 +113,6 @@
          img.crossOrigin = "Anonymous";
 
          let camera_button = document.querySelector("#start-camera");
-         let video = document.querySelector("#video");
          let click_button = document.querySelector("#click-photo");
          let canvas = document.querySelector("#canvas");
 
