@@ -38,7 +38,6 @@
           }
 
           let video = document.querySelector("#video");
-          let videoElm = document.querySelector("#video");
         // flip button element
         let flipBtn = document.querySelector('#flip-btn');
 
@@ -105,7 +104,8 @@
          let canvas = document.querySelector("#canvas");
 
          camera_button.addEventListener('click', async function() {
-               stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            defaultsOpts.video = { facingMode: shouldFaceUser ? 'user' : 'environment' }
+               stream = await navigator.mediaDevices.getUserMedia(defaultsOpts);
             video.srcObject = stream;
          });
 
