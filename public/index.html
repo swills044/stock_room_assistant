@@ -54,19 +54,6 @@
 
         let stream = null;
 
-        // function capture() {
-        // defaultsOpts.video = { facingMode: shouldFaceUser ? 'user' : 'environment' }
-        // navigator.mediaDevices.getUserMedia(defaultsOpts)
-        //     .then(function(_stream) {
-        //     stream  = _stream;
-        //     videoElm.srcObject = stream;
-        //     videoElm.play();
-        //     })
-        //     .catch(function(err) {
-        //     console.log(err)
-        //     });
-        // }
-
         flipBtn.addEventListener('click', function(){
         if( stream == null ) return
         // we need to flip, stop everything
@@ -113,27 +100,22 @@
          img.crossOrigin = "Anonymous";
 
          let camera_button = document.querySelector("#start-camera");
-         
+
          let click_button = document.querySelector("#click-photo");
          let canvas = document.querySelector("#canvas");
 
          camera_button.addEventListener('click', async function() {
-               let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+               stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
             video.srcObject = stream;
          });
 
          click_button.addEventListener('click', function() {
 
-                navigator.mediaDevices.getUserMedia({video: true})
-                .then(gotMedia)
-                .catch(error => console.error('getUserMedia() error:', error));
-
-                function gotMedia(mediaStream) {
-                const mediaStreamTrack = mediaStream.getVideoTracks()[0];
+                const mediaStreamTrack = stream.getVideoTracks()[0];
                 const imageCapture = new ImageCapture(mediaStreamTrack);
                 console.log(imageCapture);
 
-                imageCapture.grabFrame()
+                imageCapture.grabFramse()
                 .then(imageBitmap => {
                     canvas.width = imageBitmap.width;
                     canvas.height = imageBitmap.height;
@@ -141,7 +123,6 @@
                 })
                 .catch(error => console.error('grabFrame() error:', error));
 
-                }
 
             //    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 
