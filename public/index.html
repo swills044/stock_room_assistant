@@ -62,6 +62,8 @@
         // toggle / flip
         shouldFaceUser = !shouldFaceUser;
         // capture();
+        defaultsOpts.video = { facingMode: shouldFaceUser ? 'user' : 'environment' }
+        stream = navigator.mediaDevices.getUserMedia(defaultsOpts);
         })
 
         // capture();
