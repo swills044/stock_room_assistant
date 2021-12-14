@@ -15,7 +15,7 @@
       <video id="video" width="320" height="240" autoplay></video>
 
       <button id="click-photo">Click Photo</button>
-      <canvas id="canvas" width="320" height="240"></canvas>
+      <canvas id="canvas" width="320" height="240" style="filter: brightness(0.6);"></canvas>
 
       <script>
 
@@ -129,15 +129,16 @@
             //    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 
                //Filter image
-               greyScaleImage();
+            //    greyScaleImage();
 
-                //canvas.filter = "brightness(0%)";
+            //     canvas.filter = "brightness(0%)";
 
-               let imageData = contrastImage(canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height), 100);
+            //    let imageData = contrastImage(canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height), 100);
 
-               //const imageData = new ImageData(image_data_url, 2, 2);
+            //    //const imageData = new ImageData(image_data_url, 2, 2);
 
-               canvas.getContext('2d').putImageData(imageData, 0, 0);
+            //    canvas.getContext('2d').putImageData(imageData, 0, 0);
+            canvas.filter = "brightness(0%)";
                console.log(extractText());
                //Go fourth and extract !
             //    extractText().then((text)=>{
