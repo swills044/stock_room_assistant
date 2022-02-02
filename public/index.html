@@ -102,11 +102,11 @@
 
       /**
        * Print the names and majors of students in a sample spreadsheet:
-       * https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
+       * https://docs.google.com/spreadsheets/d/1AHKIIdvMB-nvksjFJFohpeTHeKNCD_QGeG9VeKvrlEQ/edit
        */
       function listMajors() {
         gapi.client.sheets.spreadsheets.values.get({
-          spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
+          spreadsheetId: '1AHKIIdvMB-nvksjFJFohpeTHeKNCD_QGeG9VeKvrlEQ',
           range: 'Class Data!A2:E',
         }).then(function(response) {
           var range = response.result;
